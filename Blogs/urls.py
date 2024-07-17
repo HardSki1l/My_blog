@@ -1,0 +1,1 @@
+#API ga beriladigan nom bu url manzil deyiladi

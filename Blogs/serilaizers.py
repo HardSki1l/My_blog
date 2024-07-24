@@ -9,5 +9,9 @@ class UserSerializer(ModelSerializer):
         fields = "__all__"
         model = UserModelBlog
 
+
+class DeleterSerializer(Serializer):
+    username = serializers.CharField(max_length=10)
+
     # username = serializers.CharField(max_length=32)
     # password = serializers.CharField(max_length=16)

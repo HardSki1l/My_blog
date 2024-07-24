@@ -15,3 +15,9 @@ class DeleterSerializer(Serializer):
 
     # username = serializers.CharField(max_length=32)
     # password = serializers.CharField(max_length=16)
+
+
+class UpdaterSerializer(Serializer):
+    username = serializers.CharField(max_length=32)
+    password = serializers.CharField(max_length=32)
+    new_password = serializers.CharField(max_length=32)

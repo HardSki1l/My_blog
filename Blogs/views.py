@@ -58,3 +58,17 @@ class DeleteUsers(APIView):
             else:
                 return Response({'Xabar': f'{username} bazada mavjud emas'}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UpdatePassword(APIView):
+    def patch(self,request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        new_password = request.data.get('new_password')
+        user = UserModelBlog.objects.all().filter(username=username, password=password)
+        if user:
+            UserModelBlog.objects.all().filter(username=username, password=password).update(password=new_password)
+            return Response({'Xabar': f'{username} userni paroli o`zgartrildi'})
+        else:
+            return Response({'Xabar': f'{username} bazada mavjud emas'}, status=status.HTTP_404_NOT_FOUND)
+
+

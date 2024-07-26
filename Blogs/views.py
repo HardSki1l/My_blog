@@ -4,10 +4,10 @@ from rest_framework import status
 # Create your views here.
 
 from rest_framework.views import APIView
-from .serilaizers import UserSerializer, DeleterSerializer
+from .serilaizers import *
 
 from rest_framework.response import Response
-from .models import UserModelBlog
+from .models import UserModelBlog,TaskList
 
 
 class Registration(APIView):
@@ -71,4 +71,14 @@ class UpdatePassword(APIView):
         else:
             return Response({'Xabar': f'{username} bazada mavjud emas'}, status=status.HTTP_404_NOT_FOUND)
 
+class SearchUserTask(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        try:
+            user = UserModelBlog.objects.get(username=username)
+            tasks = TaskList.objects.filter(who=user)
+            serializer = TaskListSerializer(tasks, many=True)
+            return Response(serializer.data)
+        except:
+            return Response({"error": "User not found"}, status=404)
 

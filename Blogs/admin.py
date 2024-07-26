@@ -3,7 +3,7 @@ from .models import TaskList, UserModelBlog
 
 
 class TaskSearch(admin.ModelAdmin):
-    search_fields = ['comment']
+    search_fields = ['who__username']
 
     def save_model(self, request, obj, form, change):
         obj.name = obj.comment

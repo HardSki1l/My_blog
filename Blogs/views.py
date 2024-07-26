@@ -80,24 +80,31 @@ class SearchUserTask(APIView):
             user = UserModelBlog.objects.get(username=username)
             tasks = TaskList.objects.filter(who=user)
             serializer = TaskListSerializer(tasks, many=True)
-            return Response(serializer.data)
 
+            serialized_data = list(serializer.data)
+
+            for task in serialized_data:
+                usernames = []
+                for user_id in task['who']:
+                    user = UserModelBlog.objects.get(id=user_id)
+                    usernames.append(user.username)
+                task['who'] = usernames
+
+            return Response(serialized_data, status="200")
         except:
-            return Response({"error": "User not found"}, status=404)
+            return Response({"msg": "User Not Found"}, status="404")
 
 
-class UserFinder(APIView):
-    serializer_class = TaskFinder
-
-    def post(self, request):
-        comment = request.data.get('comment')
-        filtr1 = TaskList.objects.all().filter(comment=comment)
-        connected_users = UserModelBlog.objects.filter(tasklist__in=filtr1).distinct()
-        print(connected_users)
-        users_list = []
-        for i in connected_users:
-            users_list.append(i.username)
-            print(i)
-        return Response({'Userlar': f"{users_list}"})
-
-
+# class UserFinder(APIView):
+#     serializer_class = TaskFinder
+#
+#     def post(self, request):
+#         comment = request.data.get('comment')
+#         filtr1 = TaskList.objects.all().filter(comment=comment)
+#         connected_users = UserModelBlog.objects.filter(tasklist__in=filtr1).distinct()
+#         print(connected_users)
+#         users_list = []
+#         for i in connected_users:
+#             users_list.append(i.username)
+#             print(i)
+#         return Response({'Userlar': f"{users_list}"})

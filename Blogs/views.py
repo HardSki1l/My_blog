@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from .serilaizers import *
 
 from rest_framework.response import Response
-from .models import UserModelBlog,TaskList
+from .models import UserModelBlog, TaskList
 
 
 class Registration(APIView):
@@ -59,8 +59,9 @@ class DeleteUsers(APIView):
                 return Response({'Xabar': f'{username} bazada mavjud emas'}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class UpdatePassword(APIView):
-    def patch(self,request):
+    def patch(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
         new_password = request.data.get('new_password')
@@ -71,6 +72,7 @@ class UpdatePassword(APIView):
         else:
             return Response({'Xabar': f'{username} bazada mavjud emas'}, status=status.HTTP_404_NOT_FOUND)
 
+
 class SearchUserTask(APIView):
     def post(self, request):
         username = request.data.get('username')
@@ -79,6 +81,23 @@ class SearchUserTask(APIView):
             tasks = TaskList.objects.filter(who=user)
             serializer = TaskListSerializer(tasks, many=True)
             return Response(serializer.data)
+
         except:
             return Response({"error": "User not found"}, status=404)
+
+
+class UserFinder(APIView):
+    serializer_class = TaskFinder
+
+    def post(self, request):
+        comment = request.data.get('comment')
+        filtr1 = TaskList.objects.all().filter(comment=comment)
+        connected_users = UserModelBlog.objects.filter(tasklist__in=filtr1).distinct()
+        print(connected_users)
+        users_list = []
+        for i in connected_users:
+            users_list.append(i.username)
+            print(i)
+        return Response({'Userlar': f"{users_list}"})
+
 

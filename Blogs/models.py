@@ -15,5 +15,6 @@ class TaskList(models.Model):
     comment = models.TextField(max_length=255)
     who = models.ManyToManyField(UserModelBlog)
 
+
     def __str__(self):
         return self.comment

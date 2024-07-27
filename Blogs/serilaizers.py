@@ -33,3 +33,8 @@ class TaskFinder(serializers.ModelSerializer):
     class Meta:
         model = TaskList
         fields = ('comment',)
+
+class CommentUpdateSerializer(serializers.Serializer):
+    comment_id = serializers.IntegerField()
+    comment = serializers.CharField(max_length=255)
+

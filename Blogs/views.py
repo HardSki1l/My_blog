@@ -95,6 +95,24 @@ class SearchUserTask(APIView):
             return Response({"msg": "User Not Found"}, status="404")
 
 
+class UpdateComment(APIView):
+    serializer_class = CommentUpdateSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            comment_id = serializer.validated_data['comment_id']
+            new_comment = serializer.validated_data['comment']
+
+            try:
+                task = TaskList.objects.get(id=comment_id)
+                task.comment = new_comment
+                task.save()
+                return Response({'Xabar': 'Comment muvaffaqiyatli yangilandi'}, status=status.HTTP_200_OK)
+            except TaskList.DoesNotExist:
+                return Response({'Xabar': 'Comment topilmadi'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 # class UserFinder(APIView):
 #     serializer_class = TaskFinder
 #

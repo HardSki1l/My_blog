@@ -108,10 +108,10 @@ class UpdateComment(APIView):
                 task = TaskList.objects.get(id=comment_id)
                 task.comment = new_comment
                 task.save()
-                return Response({'Xabar': 'Comment muvaffaqiyatli yangilandi'}, status=status.HTTP_200_OK)
+                return Response({'Xabar': 'Comment muvaffaqiyatli yangilandi'}, status="400")
             except TaskList.DoesNotExist:
-                return Response({'Xabar': 'Comment topilmadi'}, status=status.HTTP_404_NOT_FOUND)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'Xabar': 'Comment topilmadi'}, status="400")
+        return Response(serializer.errors, status="400")
 
 # class UserFinder(APIView):
 #     serializer_class = TaskFinder

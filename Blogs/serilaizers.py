@@ -38,3 +38,6 @@ class CommentUpdateSerializer(serializers.Serializer):
     comment_id = serializers.IntegerField()
     comment = serializers.CharField(max_length=255)
 
+class TaskSerializer(Serializer):
+    task_id = serializers.IntegerField()
+    user_id = serializers.IntegerField()

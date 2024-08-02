@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 from rest_framework import status
 
@@ -113,16 +114,30 @@ class UpdateComment(APIView):
                 return Response({'Xabar': 'Comment topilmadi'}, status="400")
         return Response(serializer.errors, status="400")
 
-# class UserFinder(APIView):
-#     serializer_class = TaskFinder
-#
-#     def post(self, request):
-#         comment = request.data.get('comment')
-#         filtr1 = TaskList.objects.all().filter(comment=comment)
-#         connected_users = UserModelBlog.objects.filter(tasklist__in=filtr1).distinct()
-#         print(connected_users)
-#         users_list = []
-#         for i in connected_users:
-#             users_list.append(i.username)
-#             print(i)
-#         return Response({'Userlar': f"{users_list}"})
+
+class AdduserToTask(APIView):
+    serializer_class = TaskSerializer
+
+    def post(self, request):
+        user_id = request.data.get('user_id')
+        task_id = request.data.get('task_id')
+
+        user = UserModelBlog.objects.get(id=user_id)
+        task = TaskList.objects.get(id=task_id)
+        task.who.add(user)
+        return Response({"Message": "User Added to task"})
+
+
+class DeleteuserToTask(APIView):
+    serializer_class = TaskSerializer
+
+    def post(self, request):
+        user_id = request.data.get('user_id')
+        task_id = request.data.get('task_id')
+
+        user = UserModelBlog.objects.get(id=user_id)
+        task = TaskList.objects.get(id=task_id)
+        task.who.remove(user)
+        return Response({"Message": "User removed from task"})
+
+

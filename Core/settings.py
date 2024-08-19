@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'Tasks',
     'rest_framework',
     'corsheaders',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [

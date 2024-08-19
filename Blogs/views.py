@@ -1,6 +1,14 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 from rest_framework import status
+from drf_yasg.utils import swagger_auto_schema
+
+
+
+
+
+
+
 
 # Create your views here.
 
@@ -14,6 +22,7 @@ from .models import UserModelBlog, TaskList
 class Registration(APIView):
     serializer_class = UserSerializer
 
+    @swagger_auto_schema(request_body=UserSerializer)
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
@@ -26,6 +35,7 @@ class Registration(APIView):
 class LoginAPI(APIView):
     serializer_class = UserSerializer
 
+    @swagger_auto_schema(request_body=UserSerializer)
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
@@ -48,6 +58,7 @@ class AllUsers(APIView):
 class DeleteUsers(APIView):
     serializer_class = DeleterSerializer
 
+    @swagger_auto_schema(request_body=DeleterSerializer)
     def delete(self, request):
         serializer = self.serializer_class(data=request.data)
         print(request.data)
@@ -62,6 +73,7 @@ class DeleteUsers(APIView):
 
 
 class UpdatePassword(APIView):
+    @swagger_auto_schema(request_body=UpdaterSerializer)
     def patch(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
@@ -75,6 +87,7 @@ class UpdatePassword(APIView):
 
 
 class SearchUserTask(APIView):
+    @swagger_auto_schema(request_body=DeleterSerializer)
     def post(self, request):
         username = request.data.get('username')
         try:
@@ -99,6 +112,7 @@ class SearchUserTask(APIView):
 class UpdateComment(APIView):
     serializer_class = CommentUpdateSerializer
 
+    @swagger_auto_schema(request_body=CommentUpdateSerializer)
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -115,9 +129,18 @@ class UpdateComment(APIView):
         return Response(serializer.errors, status="400")
 
 
+
+
+
+
+
+
+
+
 class AdduserToTask(APIView):
     serializer_class = TaskSerializer
 
+    @swagger_auto_schema(request_body=TaskSerializer)
     def post(self, request):
         user_id = request.data.get('user_id')
         task_id = request.data.get('task_id')
@@ -131,6 +154,7 @@ class AdduserToTask(APIView):
 class DeleteuserToTask(APIView):
     serializer_class = TaskSerializer
 
+    @swagger_auto_schema(request_body=TaskSerializer)
     def post(self, request):
         user_id = request.data.get('user_id')
         task_id = request.data.get('task_id')
@@ -139,5 +163,6 @@ class DeleteuserToTask(APIView):
         task = TaskList.objects.get(id=task_id)
         task.who.remove(user)
         return Response({"Message": "User removed from task"})
+
 
 
